@@ -77,3 +77,26 @@ it("should write manifest with no opts/config", function (cb) {
     stream.write(file);
     stream.end();
 });
+
+it("should strip from keys", function (cb) {
+
+    var stream = manifest({}, {strip: "/public", keyStrip: ".joined"});
+    var file = new gutil.File({
+        path: cwd + "/public/css/dist/unicorn.css",
+        contents: new Buffer('')
+    });
+
+    file.revOrigPath = cwd + "/public/css/unicorn.joined.css";
+
+    stream.on("data", function (file) {
+        var actual   = JSON.parse(file.contents.toString());
+        var expected = {
+            "/css/unicorn.css": "/css/dist/unicorn.css"
+        };
+        assert.deepEqual(actual, expected);
+        cb();
+    });
+
+    stream.write(file);
+    stream.end();
+});

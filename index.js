@@ -18,6 +18,9 @@ module.exports = function (existing, opts) {
             firstFile = firstFile || file;
             var toStrip = file.cwd + (config.strip || "");
             var key   = file.revOrigPath.replace(toStrip, "");
+            if (config.keyStrip) {
+                key = key.replace(config.keyStrip, "");
+            }
             var value = firstFile.path.replace(toStrip, "");
             manifest[key] = value;
         }
